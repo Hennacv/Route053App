@@ -1,3 +1,16 @@
+var db = require('../initializesdk.js');
+var locations = [];
+
+db.ref("masterSheet").once('value').then(function(snapshot){
+  var allItems = snapshot.val();
+  for(let i = 0; i < allItems.length; i++){
+    var placeId = allItems[i][4];
+    var name = allItems[i][1];
+    locations.push({ name: name, placeId: placeId });
+  }
+  console.log('locations:', locations);
+})
+
 
 function qrscanner(){
     console.log("clicked");

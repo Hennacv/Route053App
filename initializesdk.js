@@ -19,4 +19,7 @@ admin.initializeApp({
 //   firebase.initializeApp(config);
 
   // Get a reference to the database service
-  var database = firebase.database();
+  // var database = firebase.database();
+
+var db = admin.database();
+module.exports = db;

@@ -1,0 +1,51 @@
+/* body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+} */
+
+/* .navbar {
+  max-height: 60px;
+} */
+
+.bg-white {
+  background: white;
+}
+
+.bg-blue {
+  background: #0049ff;
+}
+
+.backbutton {
+  position: relative;
+  width: 25px;
+  height: auto;
+}
+
+#nav-content > ul > li {
+  max-width: 22vw;
+}
+
+.qrclick {
+  content: url("/images/qrtest.jpg");
+  position: fixed;
+  max-width: 200px;
+  top: 10%;
+  left: 20%;
+}
+
+.mapclick {
+  content: url("/images/maptest.png");
+  position: fixed;
+  max-width: 200px;
+  top: 50%;
+  left: 20%;  
+}
+
+#map {
+  width: 100vw;
+  height: 100vh;
+}

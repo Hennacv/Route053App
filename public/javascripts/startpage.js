@@ -1,4 +1,4 @@
-var map;
+var map, marker, geocoder;
 
 function qrscanner(){
     console.log("clicked");
@@ -6,7 +6,6 @@ function qrscanner(){
 }
 
 function displaymap(locations){
-    this.retrieveData(locations);
     window.location.href = "./displaymap";
     displayAll()
 }
@@ -22,6 +21,10 @@ function initMap() {
         zoom: 16
     });
 
+    geocoder = new google.maps.Geocoder;
+
+
+
     // var infowindow = new google.maps.InfoWindow();
     // var service = new google.maps.places.PlacesService(map);
 
@@ -30,6 +33,24 @@ function initMap() {
 function displayAll(){
     displayStores();
     displayRestaurants();
+}
+
+function retreieveLatLong(locations){
+    for (var i = 0; i < locations.length; i++) {
+        var placeId = locations[i].placeId;
+
+        geocode.geocode({"placeId": placeId}, function(results){
+            results = results[i].geometry.location
+        })
+
+        
+    }
+
+    // import existing locations
+    // run geocoder.geocode({"placeid": PLACEID}, FUNCTION(RESULTS))
+    // results is results[0].geometry.location
+    // POST to server db
+    // server should write to the db and update locasations
 }
 
 function displayStores(){
@@ -48,33 +69,34 @@ function displayStores(){
 
 function generateDisplays(locations){
     for(var i = 0 ; i < locations.length;  i++) {
-        var placeIdInfo = locations[i].placeId;
+        var placeId = locations[i].placeId;
 
-        var infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
+
+
+        // var infowindow = new google.maps.InfoWindow();
+        // var service = new google.maps.places.PlacesService(map);
     
-        console.log("we MAKIN A NEW ONE", locations[i].name)
-        service.getDetails(
-          {
-         placeId: placeIdInfo
-          }, function(place, status) {
-            if (status === google.maps.places.PlacesServiceStatus.OK)
-            {
-           var iconBase = 'http://retroactivesolutions.com/premadeMapForPool2/';
-                 var marker = new google.maps.Marker(
-                {
-                  map: map,
-                  position: place.geometry.location,
-                       icon: iconBase + 'icon-gallery.png'
-                });
-                console.log("ping me bitch");
-              google.maps.event.addListener(marker, 'click', function()
-                {
-                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + 'Place ID: ' + place.place_id	+ '<br>' + '<br>'	+ '<b>Adress:</b>' + '<br>'	+ place.formatted_address	+ '</div>'+ '<br>' + 'Opening Times:' + '<br>' + place.opening_hours.weekday_text[0] + '<br>' + place.opening_hours.weekday_text[1]	+ '<br>' + place.opening_hours.weekday_text[2]	+ '<br>' + place.opening_hours.weekday_text[3]	+ '<br>' + place.opening_hours.weekday_text[4] + '<br>' + place.opening_hours.weekday_text[5] + '<br>' + place.opening_hours.weekday_text[6]);
-                infowindow.open(map, this);
-                    });
-                  }
-          });
+        // service.getDetails(
+        //   {
+        //  placeId: placeIdInfo
+        //   }, function(place, status) {
+        //     if (status === google.maps.places.PlacesServiceStatus.OK)
+        //     {
+        //    var iconBase = 'http://retroactivesolutions.com/premadeMapForPool2/';
+        //          var marker = new google.maps.Marker(
+        //         {
+        //           map: map,
+        //           position: place.geometry.location,
+        //                icon: iconBase + 'icon-gallery.png'
+        //         });
+        //         console.log("ping me bitch");
+        //       google.maps.event.addListener(marker, 'click', function()
+        //         {
+        //         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + 'Place ID: ' + place.place_id	+ '<br>' + '<br>'	+ '<b>Adress:</b>' + '<br>'	+ place.formatted_address	+ '</div>'+ '<br>' + 'Opening Times:' + '<br>' + place.opening_hours.weekday_text[0] + '<br>' + place.opening_hours.weekday_text[1]	+ '<br>' + place.opening_hours.weekday_text[2]	+ '<br>' + place.opening_hours.weekday_text[3]	+ '<br>' + place.opening_hours.weekday_text[4] + '<br>' + place.opening_hours.weekday_text[5] + '<br>' + place.opening_hours.weekday_text[6]);
+        //         infowindow.open(map, this);
+        //             });
+        //           }
+        //   });
     }
 }
 
@@ -87,12 +109,52 @@ function displayRestaurants(){
     request.onload = function () {
 
         var data = JSON.parse(this.response);
-        console.log(data.results);
+        // console.log(data.results);
+        generateRestaurants(data);
     }
     request.send();
 }
 
+function generateRestaurants( data ){
+    console.log(data.results);
+    for(var i = 0 ; i < data.results.length;  i++) {
+        var names = data.results[i].name;
+        var latitude = data.results[i].geolocation.latitude;
+        var longitude = data.results[i].geolocation.longitude;
+        // console.log( latitude );
 
+    //     var infowindow = new google.maps.InfoWindow();
+    //     var service = new google.maps.places.PlacesService(map);
+    
+       marker = new google.maps.Marker({
+           map: map,
+           position: {lat: latitude,lng: longitude}
+       });
+       
+       
+        // service.getDetails(
+        //   {
+        //  placeId: placeIdInfo
+        //   }, function(place, status) {
+        //     if (status === google.maps.places.PlacesServiceStatus.OK)
+        //     {
+        //    var iconBase = 'http://retroactivesolutions.com/premadeMapForPool2/';
+        //          var marker = new google.maps.Marker(
+        //         {
+        //           map: map,
+        //           position: ,
+        //           icon: iconBase + 'icon-gallery.png'
+        //         });
+        //         console.log("ping me bitch");
+        //       google.maps.event.addListener(marker, 'click', function()
+        //         {
+        //         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + 'Place ID: ' + place.place_id	+ '<br>' + '<br>'	+ '<b>Adress:</b>' + '<br>'	+ place.formatted_address	+ '</div>'+ '<br>' + 'Opening Times:' + '<br>' + place.opening_hours.weekday_text[0] + '<br>' + place.opening_hours.weekday_text[1]	+ '<br>' + place.opening_hours.weekday_text[2]	+ '<br>' + place.opening_hours.weekday_text[3]	+ '<br>' + place.opening_hours.weekday_text[4] + '<br>' + place.opening_hours.weekday_text[5] + '<br>' + place.opening_hours.weekday_text[6]);
+        //         infowindow.open(map, this);
+        //             });
+        //          }
+        //   });
+    }
+}
 
 
 

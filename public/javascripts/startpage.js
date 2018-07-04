@@ -1,25 +1,12 @@
-var db = require('../initializesdk.js');
-var locations = [];
+var map;
 
-db.ref("masterSheet").once('value').then(function(snapshot){
-  var allItems = snapshot.val();
-  for(let i = 0; i < allItems.length; i++){
-    var placeId = allItems[i][4];
-    var name = allItems[i][1];
-    locations.push({ name: name, placeId: placeId });
-  }
-  console.log('locations:', locations);
-
-})
-
-console.log('locations:', locations);
 function qrscanner(){
     console.log("clicked");
     window.location.href = "./qrscanner";
 }
 
-function displaymap(){
-    console.log("clicked");
+function displaymap(locations){
+    this.retrieveData(locations);
     window.location.href = "./displaymap";
     displayAll()
 }
@@ -30,7 +17,7 @@ function goBack( e ){
 
 // General Map Setup
 function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 52.219841, lng: 6.896377},
         zoom: 16
     });
@@ -46,12 +33,27 @@ function displayAll(){
 }
 
 function displayStores(){
-    for (var i = 0 ; i < locations.length;  i++) {
-        var placeIdInfo = locations[i][4];
+    $.ajax({
+        method: "GET",
+        url: "/api/mastersheet",
+        dataType: "json",
+    }).fail(function(err){
+        console.error("Mastersheet call failed.", err)
+    }).always(function(){
+        console.info("Processing mastersheet call.")
+    }).done(function(data){
+        generateDisplays(data);
+    })
+}
+
+function generateDisplays(locations){
+    for(var i = 0 ; i < locations.length;  i++) {
+        var placeIdInfo = locations[i].placeId;
 
         var infowindow = new google.maps.InfoWindow();
         var service = new google.maps.places.PlacesService(map);
     
+        console.log("we MAKIN A NEW ONE", locations[i].name)
         service.getDetails(
           {
          placeId: placeIdInfo
@@ -65,6 +67,7 @@ function displayStores(){
                   position: place.geometry.location,
                        icon: iconBase + 'icon-gallery.png'
                 });
+                console.log("ping me bitch");
               google.maps.event.addListener(marker, 'click', function()
                 {
                 infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + 'Place ID: ' + place.place_id	+ '<br>' + '<br>'	+ '<b>Adress:</b>' + '<br>'	+ place.formatted_address	+ '</div>'+ '<br>' + 'Opening Times:' + '<br>' + place.opening_hours.weekday_text[0] + '<br>' + place.opening_hours.weekday_text[1]	+ '<br>' + place.opening_hours.weekday_text[2]	+ '<br>' + place.opening_hours.weekday_text[3]	+ '<br>' + place.opening_hours.weekday_text[4] + '<br>' + place.opening_hours.weekday_text[5] + '<br>' + place.opening_hours.weekday_text[6]);

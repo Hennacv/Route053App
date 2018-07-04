@@ -49,3 +49,7 @@ a {
   width: 100vw;
   height: 100vh;
 }
+
+.nav-item {
+  cursor: pointer;
+}

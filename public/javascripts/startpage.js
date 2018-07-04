@@ -21,6 +21,7 @@ function qrscanner(){
 function displaymap(){
     console.log("clicked");
     window.location.href = "./displaymap";
+    displayAll()
 }
 
 function goBack( e ){

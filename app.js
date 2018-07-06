@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var router = express.Router();
 var db = require('./initializesdk.js');
+
 var indexRouter = require('./routes/index');
 var qrscannerRouter = require('./routes/qrscanner');
 var dismapRouter = require('./routes/displaymap');
@@ -35,10 +36,58 @@ router.route("/api/mastersheet").get(function(req, res) {
     for(let i = 1; i < allItems.length; i++){
         var placeId = allItems[i][4];
         var name = allItems[i][1];
-        locations.push({ name: name, placeId: placeId });
+        var category = allItems[i][2];
+        var latitude = allItems[i][7];
+        var longitude = allItems[i][8];
+
+        locations.push({ name: name, placeId: placeId, latitude: latitude, longitude: longitude, category: category});
     }
     console.log("locs:", locations);
     res.send(locations);
+    })
+})
+
+router.route("/api/culturesheet").get(function(req, res) {
+  var cultures = [];
+
+  db.ref("cultureSheet").once('value').then(function(snapshot){
+
+    var allItems = snapshot.val();
+    for(let i = 1; i < allItems.length; i++){
+        var placeId = allItems[i][4];
+        var name = allItems[i][1];
+        var latitude = allItems[i][7];
+        var longitude = allItems[i][8];
+
+        cultures.push({ name: name, placeId: placeId, latitude: latitude, longitude: longitude});
+    }
+    console.log("cults:", cultures);
+    res.send(cultures);
+    })
+})
+
+
+router.route("/api/restsheet").get(function(req, res) {
+  var restaurants = [];
+  console.log("step1");
+
+  db.ref("restSheet").once('value').then(function(snapshot){
+    console.log("step2");
+    // console.log(snapshot)
+
+    var allRestaurants = snapshot.val();
+    console.log("step3");
+    console.log(allRestaurants);
+    for(var i = 1; i < allRestaurants.length; i++){
+        var name = allRestaurants[i][0];
+        var latitude = allRestaurants[i][5];
+        var longitude = allRestaurants[i][6];
+        console.log("step4")
+
+        restaurants.push({ name: name, latitude: latitude, longitude: longitude});
+    }
+    console.log("rests:", restaurants);
+    res.send(restaurants);
     })
 })
 

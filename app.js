@@ -66,6 +66,31 @@ router.route("/api/culturesheet").get(function(req, res) {
     })
 })
 
+
+router.route("/api/restsheet").get(function(req, res) {
+  var restaurants = [];
+  console.log("step1");
+
+  db.ref("restSheet").once('value').then(function(snapshot){
+    console.log("step2");
+    // console.log(snapshot)
+
+    var allRestaurants = snapshot.val();
+    console.log("step3");
+    console.log(allRestaurants);
+    for(var i = 1; i < allRestaurants.length; i++){
+        var name = allRestaurants[i][0];
+        var latitude = allRestaurants[i][5];
+        var longitude = allRestaurants[i][6];
+        console.log("step4")
+
+        restaurants.push({ name: name, latitude: latitude, longitude: longitude});
+    }
+    console.log("rests:", restaurants);
+    res.send(restaurants);
+    })
+})
+
 app.use("/", router);
 
 // catch 404 and forward to error handler

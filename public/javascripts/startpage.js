@@ -76,8 +76,8 @@ function generateDisplays(locations){
         var category = locations[i].category;
         var name = locations[i].name;
 
-        console.log(category);
-        console.log(name);
+        // console.log(category);
+        // console.log(name);
         
 
         marker = new google.maps.Marker({
@@ -86,31 +86,8 @@ function generateDisplays(locations){
         });
         markers.push(marker);
 
-        console.log(markers);
-        // var infowindow = new google.maps.InfoWindow();
-        // var service = new google.maps.places.PlacesService(map);
-    
-        // service.getDetails(
-        //   {
-        //  placeId: placeId
-        //   }, function(place, status) {
-        //     if (status === google.maps.places.PlacesServiceStatus.OK)
-        //     {
-        //    var iconBase = 'http://retroactivesolutions.com/premadeMapForPool2/';
-        //          var marker = new google.maps.Marker(
-        //         {
-        //           map: map,
-        //           position: place.geometry.location,
-        //                icon: iconBase + 'icon-gallery.png'
-        //         });
-        //         console.log("ping me bitch");
-        //       google.maps.event.addListener(marker, 'click', function()
-        //         {
-        //         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + 'Place ID: ' + place.place_id	+ '<br>' + '<br>'	+ '<b>Adress:</b>' + '<br>'	+ place.formatted_address	+ '</div>'+ '<br>' + 'Opening Times:' + '<br>' + place.opening_hours.weekday_text[0] + '<br>' + place.opening_hours.weekday_text[1]	+ '<br>' + place.opening_hours.weekday_text[2]	+ '<br>' + place.opening_hours.weekday_text[3]	+ '<br>' + place.opening_hours.weekday_text[4] + '<br>' + place.opening_hours.weekday_text[5] + '<br>' + place.opening_hours.weekday_text[6]);
-        //         infowindow.open(map, this);
-        //             });
-        //           }
-        //   });
+        // console.log(markers);
+
     }
 }
 
@@ -125,27 +102,41 @@ function clearMarkers(){
 }
 
 function displayRestaurants(){
+    // console.log("clicked");
+
+    $.ajax({
+        method: "GET",
+        url: "/api/restsheet",
+        dataType: "json",
+    }).fail(function(err){
+        console.error("Restsheet call failed.", err)
+    }).always(function(){
+        console.info("Processing Restsheet call.")
+    }).done(function(data){
+        // console.log("work bitch")
+        generateRestaurants(data);
+    })
     //get the shit from the eet.nu database
     
-    var request = new XMLHttpRequest();
+    // var request = new XMLHttpRequest();
 
-    request.open('GET', 'http://api.eet.nu/venues?geolocation=52.2208%2C6.89114', true);
-    request.onload = function () {
+    // request.open('GET', 'http://api.eet.nu/venues?geolocation=52.2208%2C6.89114', true);
+    // request.onload = function () {
 
-        var data = JSON.parse(this.response);
-        // console.log(data.results);
-        generateRestaurants(data);
-    }
-    request.send();
+    //     var data = JSON.parse(this.response);
+    //     console.log(data.results);
+    //     // generateRestaurants(data);
+    // }
+    // request.send();
 }
 
-function generateRestaurants( data ){
-    console.log(data.results);
-    for(var i = 0 ; i < data.results.length;  i++) {
-        var names = data.results[i].name;
-        var latitude = data.results[i].geolocation.latitude;
-        var longitude = data.results[i].geolocation.longitude;
-        // console.log( latitude );
+function generateRestaurants( restaurants ){
+    // console.log(data);
+    for(var i = 0 ; i < restaurants.length;  i++) {
+        var latitude = restaurants[i].latitude;
+        var longitude = restaurants[i].longitude;
+        var name = restaurants[i].name;
+        // console.log( name);
 
     //     var infowindow = new google.maps.InfoWindow();
     //     var service = new google.maps.places.PlacesService(map);

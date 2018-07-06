@@ -38,13 +38,15 @@ function displayAll(){
 function retreieveLatLong(locations){
     for (var i = 0; i < locations.length; i++) {
         var placeId = locations[i].placeId;
+        console.log("current location: ", locations[i].name)
 
-        geocode.geocode({"placeId": placeId}, function(results){
-            results = results[i].geometry.location
+        geocoder.geocode({"placeId": placeId}, function(results, status){
+            console.log("res:", status);
+            locations[i].location = results[0].geometry.location
         })
-
-        
     }
+
+    console.log("updated locations");
 
     // import existing locations
     // run geocoder.geocode({"placeid": PLACEID}, FUNCTION(RESULTS))
@@ -63,7 +65,7 @@ function displayStores(){
     }).always(function(){
         console.info("Processing mastersheet call.")
     }).done(function(data){
-        generateDisplays(data);
+        retreieveLatLong(data);
     })
 }
 

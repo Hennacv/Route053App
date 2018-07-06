@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var router = express.Router();
 var db = require('./initializesdk.js');
+
 var indexRouter = require('./routes/index');
 var qrscannerRouter = require('./routes/qrscanner');
 var dismapRouter = require('./routes/displaymap');
@@ -35,10 +36,33 @@ router.route("/api/mastersheet").get(function(req, res) {
     for(let i = 1; i < allItems.length; i++){
         var placeId = allItems[i][4];
         var name = allItems[i][1];
-        locations.push({ name: name, placeId: placeId });
+        var category = allItems[i][2];
+        var latitude = allItems[i][7];
+        var longitude = allItems[i][8];
+
+        locations.push({ name: name, placeId: placeId, latitude: latitude, longitude: longitude, category: category});
     }
     console.log("locs:", locations);
     res.send(locations);
+    })
+})
+
+router.route("/api/culturesheet").get(function(req, res) {
+  var cultures = [];
+
+  db.ref("cultureSheet").once('value').then(function(snapshot){
+
+    var allItems = snapshot.val();
+    for(let i = 1; i < allItems.length; i++){
+        var placeId = allItems[i][4];
+        var name = allItems[i][1];
+        var latitude = allItems[i][7];
+        var longitude = allItems[i][8];
+
+        cultures.push({ name: name, placeId: placeId, latitude: latitude, longitude: longitude});
+    }
+    console.log("cults:", cultures);
+    res.send(cultures);
     })
 })
 

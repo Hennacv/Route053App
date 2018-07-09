@@ -31,7 +31,7 @@ app.use('/displaymap', dismapRouter);
 // app.use('/kmlRoute', kmlRoute);
 // app.use('/objectRoute', objectRoute);
 app.get('/qr/kml/:link', function(req, res, next){
-  res.render('kmlRoute', { title: 'Generating Route', filePath: req.params.link });
+  res.render('kmlRoute', { title: 'Generating Route', link: req.params.link });
 });
 app.get('/qr/location/:object', function(req, res, next){
   res.render('objectRoute', { title: 'Finding Location', latlon: req.params.object });

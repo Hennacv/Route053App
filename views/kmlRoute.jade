@@ -1,6 +1,12 @@
 extends layout
 
 block content
+    div(id="path" class="makemegopoof") !{link}
+    script.
+        window.onload = function(){
+            var path = document.getElementById('path').textContent;
+            displayKML(path);
+        }
     nav.navbar.fixed-top.bg-white
         a.navbar-brand(style="color: #0049ff;") !{link}
 

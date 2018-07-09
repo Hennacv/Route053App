@@ -100,3 +100,7 @@ function displayLatLon(latlon){
     var location = { lat: lat, lng: lng}
     addMarker(location, true);
 }
+
+function displayKML(link){
+    console.log("link:", link);
+}

@@ -103,4 +103,7 @@ function displayLatLon(latlon){
 
 function displayKML(link){
     console.log("link:", link);
+    // thing link needs to get parsed
+    //divide each section with a "@"
+    // @path|@coord1|@coord2
 }

@@ -80,10 +80,23 @@ function createMarkers(locations, removeMarkers){
         var longitude = locations[i].longitude;
         const location = { lat: latitude, lng: longitude };
 
-        var placeId = locations[i].placeId;
-        var category = locations[i].category;
-        var name = locations[i].name;
+        if(location.hasOwnProperty("placeId")){
+            var placeId = locations[i].placeId;
+            var category = locations[i].category;
+            var name = locations[i].name;
+        }
 
         addMarker(location);
     }
+}
+
+function displayLatLon(latlon){
+    var lat, lng;
+    if(latlon.charAt(0) === "@"){
+        var latlng = latlon.slice(1);
+        lat = parseFloat(latlng.split(',')[0]);
+        lng = parseFloat(latlng.split(',')[1]);
+    }
+    var location = { lat: lat, lng: lng}
+    addMarker(location, true);
 }

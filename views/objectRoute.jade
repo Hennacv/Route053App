@@ -1,6 +1,12 @@
 extends layout
 
 block content
+    div(id="latlon" class="makemegopoof") !{latlon}
+    script.
+        window.onload = function(){
+            var latlon = document.getElementById('latlon').textContent;
+            displayLatLon(latlon);
+        }
     nav.navbar.fixed-top.bg-white
         a.navbar-brand(style="color: #0049ff;") !{latlon}
 

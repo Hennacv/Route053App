@@ -42,7 +42,7 @@ a {
   position: fixed;
   max-width: 200px;
   top: 50%;
-  left: 20%;  
+  left: 20%;
 }
 
 #map {
@@ -52,4 +52,8 @@ a {
 
 .nav-item {
   cursor: pointer;
+}
+
+.makemegopoof {
+  opacity: 0;
 }

@@ -25,9 +25,6 @@ a {
   height: auto;
 }
 
-#nav-content > ul > li {
-  max-width: 22vw;
-}
 
 .qrclick {
   content: url("/images/qrtest.jpg");
@@ -45,6 +42,20 @@ a {
   left: 20%;  
 }
 
+.mapclicky {
+  background: url("/images/frontpage.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: fixed;
+  background-position: 50% 50%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  content: "";
+  z-index: 0;
+}
+
 #map {
   width: 100vw;
   height: 100vh;
@@ -52,4 +63,10 @@ a {
 
 .nav-item {
   cursor: pointer;
+}
+
+.nav-img {
+  max-width: 50px;
+  max-height: 50px;
+  padding: 2px;
 }

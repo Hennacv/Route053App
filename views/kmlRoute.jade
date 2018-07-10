@@ -1,0 +1,25 @@
+extends layout
+
+block content
+    div(id="path" class="makemegopoof") !{link}
+    script.
+        window.onload = function(){
+            var path = document.getElementById('path').textContent;
+            displayKML(path);
+        }
+    nav.navbar.fixed-top.bg-white
+        a.navbar-brand(style="color: #0049ff;") !{link}
+
+    div(id="map" class="map")
+
+    nav.navbar.fixed-bottom.bg-white
+        #nav-content
+            ul.nav
+                li.nav-item
+                    a.nav-link(onclick="displayAll()") All
+                li.nav-item
+                    a.nav-link(onclick="retrieveLocations('mastersheet', true)") Winkels
+                li.nav-item
+                    a.nav-link(onclick="retrieveLocations('restsheet', true)") Restaur
+                li.nav-item
+                    a.nav-link(onclick="retrieveLocations('culturesheet', true)") Cultuur

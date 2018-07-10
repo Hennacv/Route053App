@@ -39,7 +39,7 @@ a {
   position: fixed;
   max-width: 200px;
   top: 50%;
-  left: 20%;  
+  left: 20%;
 }
 
 .mapclicky {
@@ -69,4 +69,7 @@ a {
   max-width: 50px;
   max-height: 50px;
   padding: 2px;
+}
+.makemegopoof {
+  opacity: 0;
 }

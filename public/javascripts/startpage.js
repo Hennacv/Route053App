@@ -91,14 +91,20 @@ function createMarkers(locations, removeMarkers){
 }
 
 function displayLatLon(latlon){
-    var lat, lng;
-    if(latlon.charAt(0) === "@"){
-        var latlng = latlon.slice(1);
-        lat = parseFloat(latlng.split(',')[0]);
-        lng = parseFloat(latlng.split(',')[1]);
+    var chunks = latlon.split("|");
+    var location = {};
+    for( var i = 0; i < chunks.length; i++ ){
+        if(chunks[i].charAt(0) === "@"){
+            var placeId, lat, lng;
+            var latlng = chunks[i].slice(1);
+            placeId = latlng.split(',')[0]
+            lat = parseFloat(latlng.split(',')[1]);
+            lng = parseFloat(latlng.split(',')[2]);
+            location[placeId] = { lat: lat, lng: lng}
+            addMarker(location[placeId], true);
+        }
     }
-    var location = { lat: lat, lng: lng}
-    addMarker(location, true);
+    console.log(location);
 }
 
 function displayKML(link){

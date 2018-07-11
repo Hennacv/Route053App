@@ -1,9 +1,13 @@
 extends layout
 
 block content
+    script.
+        window.onload = function(){
+            displayAll()
+        }
     nav.navbar.fixed-top.bg-white
         a.navbar-brand(style="color: #0049ff;") Kaart
-            
+
     div(id="map" class="map")
     div(id="bitch")
 

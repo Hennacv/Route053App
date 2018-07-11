@@ -1,11 +1,11 @@
 extends layout
 
 block content
-    div(id="path" class="makemegopoof") !{link}
+    div(id="dataString" class="makemegopoof") !{dataString}
     script.
         window.onload = function(){
-            var path = document.getElementById('path').textContent;
-            findPath(link);
+            var dataString = document.getElementById('dataString').textContent;
+            findPath(dataString);
         }
     nav.navbar.fixed-top.bg-white
         a.navbar-brand(style="color: #0049ff;") Kaart
@@ -16,10 +16,14 @@ block content
         #nav-content
             ul.nav
                 li.nav-item
-                    a.nav-link(onclick="displayAll()") All
+                    a.nav-link(align="center" onclick="displayAll()")
+                        img.nav-img(src="/images/All.png")
                 li.nav-item
-                    a.nav-link(onclick="retrieveLocations('mastersheet', true)") Winkels
+                    a.nav-link(align="center" onclick="retrieveLocations('mastersheet', true)")
+                        img.nav-img(src="/images/Shopping.png")
                 li.nav-item
-                    a.nav-link(onclick="retrieveLocations('restsheet', true)") Restaur
+                    a.nav-link(align="center" onclick="retrieveLocations('restsheet', true)")
+                        img.nav-img(src="/images/Restaurant.png")
                 li.nav-item
-                    a.nav-link(onclick="retrieveLocations('culturesheet', true)") Cultuur
+                    a.nav-link(align="center" onclick="retrieveLocations('culturesheet', true)")
+                        img.nav-img(src="/images/Cultuur.png")

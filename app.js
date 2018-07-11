@@ -30,8 +30,8 @@ app.use('/qrscanner', qrscannerRouter);
 app.use('/displaymap', dismapRouter);
 // app.use('/kmlRoute', kmlRoute);
 // app.use('/objectRoute', objectRoute);
-app.get('/qr/route/:link', function(req, res, next){
-  res.render('routePath', { title: 'Generating Route', link: req.params.link });
+app.get('/qr/route/:dataString', function(req, res, next){
+  res.render('routePath', { title: 'Generating Route', dataString: req.params.dataString });
 });
 app.get('/qr/location/:object', function(req, res, next){
   res.render('objectRoute', { title: 'Finding Location', latlon: req.params.object });
@@ -52,7 +52,6 @@ router.route("/api/mastersheet").get(function(req, res) {
 
         locations.push({ name: name, placeId: placeId, latitude: latitude, longitude: longitude, category: category});
     }
-    console.log("locs:", locations);
     res.send(locations);
     })
 })
@@ -71,7 +70,6 @@ router.route("/api/culturesheet").get(function(req, res) {
 
         cultures.push({ name: name, placeId: placeId, latitude: latitude, longitude: longitude});
     }
-    console.log("cults:", cultures);
     res.send(cultures);
     })
 })
@@ -79,24 +77,17 @@ router.route("/api/culturesheet").get(function(req, res) {
 
 router.route("/api/restsheet").get(function(req, res) {
   var restaurants = [];
-  console.log("step1");
 
   db.ref("restSheet").once('value').then(function(snapshot){
-    console.log("step2");
-    // console.log(snapshot)
 
     var allRestaurants = snapshot.val();
-    console.log("step3");
-    console.log(allRestaurants);
     for(var i = 1; i < allRestaurants.length; i++){
         var name = allRestaurants[i][0];
-        var latitude = allRestaurants[i][5];
-        var longitude = allRestaurants[i][6];
-        console.log("step4")
+        var latitude = allRestaurants[i][7];
+        var longitude = allRestaurants[i][8];
 
         restaurants.push({ name: name, latitude: latitude, longitude: longitude});
     }
-    console.log("rests:", restaurants);
     res.send(restaurants);
     })
 })

@@ -1,4 +1,6 @@
-var map, marker, geocoder, markers = [];
+var map, marker, geocoder, directionsDisplay, directionsService, markers = [];
+var laLigna = "ChIJY-34S3IUuEcRQInBMslCYjE"
+var laLignaLatLng = { lat: 52.2202142, lng: 6.89785119999999 }
 
 function qrscanner(){
     console.log("clicked");
@@ -20,7 +22,9 @@ function initMap() {
         zoom: 16
     });
 
-    geocoder = new google.maps.Geocoder;
+    // geocoder = new google.maps.Geocoder;
+    directionsService = new google.maps.DirectionsService();
+    directionsDisplay = new google.maps.DirectionsRenderer();
 }
 
 function addMarker(location) {
@@ -42,15 +46,15 @@ function clearMarkers(){
     markers = [];
 }
 
-function retreieveLatLong(locations){
-    for (var i = 0; i < locations.length; i++) {
-        var placeId = locations[i].placeId;
+// function retreieveLatLong(locations){
+//     for (var i = 0; i < locations.length; i++) {
+//         var placeId = locations[i].placeId;
 
-        geocoder.geocode({"placeId": placeId}, function(results, status){
-            locations[i].location = results[0].geometry.location
-        })
-    }
-}
+//         geocoder.geocode({"placeId": placeId}, function(results, status){
+//             locations[i].location = results[0].geometry.location
+//         })
+//     }
+// }
 
 // return all (winkels, restaurant, cultuur)
 function displayAll(){
@@ -91,20 +95,40 @@ function createMarkers(locations, removeMarkers){
 }
 
 function displayLatLon(latlon){
-    var chunks = latlon.split("|");
+    // var chunks = latlon.split("|");
+    var chunks = latlon.split(',')
     var location = {};
+    var latlng;
     for( var i = 0; i < chunks.length; i++ ){
         if(chunks[i].charAt(0) === "@"){
             var placeId, lat, lng;
             var latlng = chunks[i].slice(1);
-            placeId = latlng.split(',')[0]
-            lat = parseFloat(latlng.split(',')[1]);
-            lng = parseFloat(latlng.split(',')[2]);
+            placeId = chunks[0]
+            lat = parseFloat(chunks[1]);
+            lng = parseFloat(chunks[2]);
             location[placeId] = { lat: lat, lng: lng}
+            latlng = { lat: lat, lng: lng};
             addMarker(location[placeId], true);
         }
     }
     console.log(location);
+    getDirections(latlng);
+}
+
+function getDirections(destination){
+    var request = {
+        origin: laLignaLatLng,
+        destination: destination,
+        travelMode: "WALKING"
+    }
+
+    directionsService.route(request, function(result, status){
+        if(status == "OK"){
+            directionsDisplay.setDirections(result);
+        }
+    })
+
+    directionsDisplay.setMap(map);
 }
 
 function displayKML(link){

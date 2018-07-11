@@ -58,7 +58,9 @@ a {
 
 #map {
   width: 100vw;
-  height: 100vh;
+  height: 90vh;
+  margin-top: 40px;
+  margin-bottom: 66px;
 }
 
 .nav-item {

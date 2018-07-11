@@ -37,7 +37,7 @@ function displayAll(){
 }
 
 function retrieveLocations(name, removeMarkers){
-    (removeMarkers) ? initMap() : null;
+    // if(removeMarkers) clearMarkers();
     $.ajax({
         method: "GET",
         url: `/api/${name}`,
@@ -47,27 +47,28 @@ function retrieveLocations(name, removeMarkers){
     }).always(function(){
         console.info("Processing mastersheet call.")
     }).done(function(data){
+        console.log("incoming data:", data);
         createMarkers(data, removeMarkers);
-        setMapOnAll();
+        // setMapOnAll();
     })
 }
 
 function createMarkers(locations, removeMarkers){
     if(removeMarkers) clearMarkers();
-    console.log("loc:", locations);
+    // console.log("loc:", locations);
     for(var i = 0 ; i < locations.length;  i++) {
         var latitude = locations[i].latitude;
         var longitude = locations[i].longitude;
-        const location = { lat: latitude, lng: longitude };
+        var location = { lat: latitude, lng: longitude };
 
         if(location.hasOwnProperty("placeId")){
             var placeId = locations[i].placeId;
             var category = locations[i].category;
             var name = locations[i].name;
         }
-        console.log("loc:", location)
         addMarker(location);
     }
+    // setMapOnAll();
 }
 
 
@@ -121,7 +122,7 @@ function addMarker(location) {
     });
 }
 
-function setMapOnAll() {
+function setMapOnAll(map) {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(map);
     }
@@ -130,6 +131,7 @@ function setMapOnAll() {
 function clearMarkers(){
     setMapOnAll(null);
     markers = [];
+    console.log("after clearing markers", markers)
 }
 
 function displayLatLon(latlon){

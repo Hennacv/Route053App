@@ -70,6 +70,7 @@ router.route("/api/culturesheet").get(function(req, res) {
 
         cultures.push({ name: name, placeId: placeId, latitude: latitude, longitude: longitude});
     }
+    cultures.pop();
     res.send(cultures);
     })
 })

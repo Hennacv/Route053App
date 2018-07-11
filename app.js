@@ -9,7 +9,7 @@ var db = require('./initializesdk.js');
 var indexRouter = require('./routes/index');
 var qrscannerRouter = require('./routes/qrscanner');
 var dismapRouter = require('./routes/displaymap');
-var kmlRoute = require('./routes/kmlRoute')
+var routePath = require('./routes/routePath')
 var objectRoute = require('./routes/objectRoute');
 
 var app = express();
@@ -30,8 +30,8 @@ app.use('/qrscanner', qrscannerRouter);
 app.use('/displaymap', dismapRouter);
 // app.use('/kmlRoute', kmlRoute);
 // app.use('/objectRoute', objectRoute);
-app.get('/qr/kml/:link', function(req, res, next){
-  res.render('kmlRoute', { title: 'Generating Route', link: req.params.link });
+app.get('/qr/route/:link', function(req, res, next){
+  res.render('routePath', { title: 'Generating Route', link: req.params.link });
 });
 app.get('/qr/location/:object', function(req, res, next){
   res.render('objectRoute', { title: 'Finding Location', latlon: req.params.object });

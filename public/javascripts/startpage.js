@@ -1,4 +1,4 @@
-var map, marker, geocoder, directionsDisplay, directionsService, markers = [];
+var map, marker, geocoder, directionsDisplay, directionsService, service, infowindow, markers = [];
 var laLigna = "ChIJY-34S3IUuEcRQInBMslCYjE"
 var laLignaLatLng = { lat: 52.2202142, lng: 6.89785119999999 }
 
@@ -23,19 +23,63 @@ function initMap() {
     });
 
     // geocoder = new google.maps.Geocoder;
+    infowindow = new google.maps.InfoWindow();
+    service = new google.maps.places.PlacesService(map);
     directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer();
 }
 
 function addMarker(location) {
-    var marker = new google.maps.Marker({
-        position: location,
-        map: map
+    console.log("placeId:", location);
+    // var marker = new google.maps.Marker({
+    //     position: location,
+    //     map: map
+    // });
+    // markers.push(marker);
+    service.getDetails({
+        placeId: location
+    }, function(place, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+            var iconBase = 'http://chananbos.com/pinkball/icons/';
+            var marker = new google.maps.Marker({
+                map: map,
+                position: place.geometry.location,
+                //  icon: iconBase + 'poolmarker.png'
+            });
+            markers.push(marker);
+
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent(
+                    '<div><strong>' + place.name + '</strong><br>' +
+                    '<br>'
+                    + '<b>Adress:</b>'
+                    + '<br>'
+                    + place.formatted_address
+                    + '</div>'
+                    + '<br>'
+                    + '<b>Opening Times:</b>'
+                    + '<br>'
+                    + place.opening_hours.weekday_text[0]
+                    + '<br>'
+                    + place.opening_hours.weekday_text[1]
+                    + '<br>'
+                    + place.opening_hours.weekday_text[2]
+                    + '<br>'
+                    + place.opening_hours.weekday_text[3]
+                    + '<br>'
+                    + place.opening_hours.weekday_text[4]
+                    + '<br>'
+                    + place.opening_hours.weekday_text[5]
+                    + '<br>'
+                    + place.opening_hours.weekday_text[6]
+                );
+                infowindow.open(map, this);
+            });
+        }
     });
-    markers.push(marker);
 }
 
-function setMapOnAll(map) {
+function setMapOnAll() {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(map);
     }
@@ -78,7 +122,9 @@ function retrieveLocations(name, removeMarkers){
 }
 
 function createMarkers(locations, removeMarkers){
+    console.log("createMarkers");
     if(removeMarkers) clearMarkers();
+    console.log("loc:", locations);
     for(var i = 0 ; i < locations.length;  i++) {
         var latitude = locations[i].latitude;
         var longitude = locations[i].longitude;
@@ -95,6 +141,7 @@ function createMarkers(locations, removeMarkers){
 }
 
 function displayLatLon(latlon){
+    console.log("displayLatLon");
     // var chunks = latlon.split("|");
     var chunks = latlon.split(',')
     var location = {};
@@ -103,15 +150,15 @@ function displayLatLon(latlon){
         if(chunks[i].charAt(0) === "@"){
             var placeId, lat, lng;
             var latlng = chunks[i].slice(1);
-            placeId = chunks[0]
+            console.log("typeof:", typeof(chunks[0]));
+            placeId = String(chunks[0]).substring(1);
             lat = parseFloat(chunks[1]);
             lng = parseFloat(chunks[2]);
             location[placeId] = { lat: lat, lng: lng}
             latlng = { lat: lat, lng: lng};
-            addMarker(location[placeId], true);
+            addMarker(placeId, true);
         }
     }
-    console.log(location);
     getDirections(latlng);
 }
 
@@ -129,11 +176,4 @@ function getDirections(destination){
     })
 
     directionsDisplay.setMap(map);
-}
-
-function displayKML(link){
-    console.log("link:", link);
-    // thing link needs to get parsed
-    //divide each section with a "@"
-    // @path|@coord1|@coord2
 }
